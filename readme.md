@@ -13,6 +13,9 @@ Before running the script, ensure you have:
 - Internet access to access the Vozona Gasy website
 
 ---
+##  Privacy Policy
+I am not responsible for all usage og this code, the user take the entire responsibility of his usage , on the way of getting this code and using this code you agree with the privacy policy
+
 
 ## Step 1: Clone the Repository
 
@@ -61,7 +64,7 @@ async function scrapeExample() {
 
     // Clear the input field (optional) and enter the phone number
     await phoneNumberInput.clear(); // This ensures the field is cleared
-    await phoneNumberInput.sendKeys("0349424026"); // Insert the phone number
+    await phoneNumberInput.sendKeys("0343403434"); // Insert the phone number Ajus as needed
 
     // Optional: Wait for a short time to see the result
     await driver.sleep(4000);
