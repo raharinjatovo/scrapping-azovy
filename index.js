@@ -17,7 +17,7 @@ async function scrapeExample() {
 
     // Clear the input field (optional) and enter the phone number
     await phoneNumberInput.clear(); // This ensures the field is cleared
-    await phoneNumberInput.sendKeys("0349424026"); // Insert the phone number
+    await phoneNumberInput.sendKeys("0343403434"); // Insert the phone number
 
     // Optional: Wait for a short time to see the result
     await driver.sleep(4000);
