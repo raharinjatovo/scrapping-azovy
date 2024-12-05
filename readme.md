@@ -19,8 +19,8 @@ Before running the script, ensure you have:
 Run the following commands in your terminal to clone the project repository and navigate to the directory:
 
 ```bash
-git clone https://github.com/raharinjatovo/scrapping-vozona-gasy.git
-cd scrapping-vozona-gasy
+git clone https://github.com/raharinjatovo/scrapping-azovy.git
+cd scrapping-azovy
 ```
 
 ---
@@ -39,57 +39,74 @@ This will install all dependencies listed in the `package.json` file.
 
 ## Step 3: Review the Script
 
-The following is the script used for web scraping. It uses Selenium WebDriver with Node.js and interacts with the Vozona Gasy website.
+The following is the script used for web scraping. It uses Selenium WebDriver with Node.js and interacts with the Azovy  website.
 
 ```javascript
-const { Builder, By, until } = require('selenium-webdriver');
-require('chromedriver');
-
+const { Builder, By, until } = require("selenium-webdriver");
+require("chromedriver");
 async function scrapeExample() {
   // Create a new instance of the Chrome browser
-  let driver = await new Builder().forBrowser('chrome').build();
-
+  let driver = await new Builder().forBrowser("chrome").build();
   try {
     // Navigate to the website you want to scrape
-    await driver.get('https://vozonagasy.vercel.app/');
+    await driver.get("https://azovy.vercel.app/");
 
     // Wait for the page to load and for a specific element to be present
-    await driver.wait(until.elementLocated(By.tagName('h1')), 10000);
+    await driver.wait(until.elementLocated(By.tagName("h1")), 10000);
 
-    // Wait for the page to load and for the <textarea> with the specific placeholder to be available
-    await driver.wait(until.elementLocated(By.css('textarea[placeholder="Entrez un texte à traduire"]')), 10000);
+    await driver.wait(until.elementLocated(By.id("phone_number")), 10000);
 
-    // Locate the <textarea> by its placeholder attribute
-    const textarea = await driver.findElement(By.css('textarea[placeholder="Entrez un texte à traduire"]'));
+    // Locate the phone number input field
+    let phoneNumberInput = await driver.findElement(By.id("phone_number"));
+
+    // Clear the input field (optional) and enter the phone number
+    await phoneNumberInput.clear(); // This ensures the field is cleared
+    await phoneNumberInput.sendKeys("0349424026"); // Insert the phone number
+
+    // Optional: Wait for a short time to see the result
+    await driver.sleep(4000);
+
+
     
-    // Clear the textarea (optional, in case there is already text in it)
-    await textarea.clear();
-
-    // Insert text into the textarea
-    await textarea.sendKeys('Hello, this is the text I want to translate!');
-    // Wait for the button with class 'buttonSend' to be available
-    const buttonSend = await driver.wait(until.elementLocated(By.className('buttonSend')), 10000);
-
-    // Click the button to submit or trigger the action
-    await buttonSend.click();
-
-     // Wait for the child element with class 'text-white-50' inside 'mt-4 p-4 rounded' to be present
-     const textElement = await driver.wait(
-        until.elementLocated(By.css('.mt-4.p-4.rounded .text-white-50')), 10000
-     );
-  
-      // Extract the text from the element
-      const extractedText = await textElement.getText();
-      console.log('Extracted text:', extractedText);
-  
-      // Optional: wait a moment to see the action performed
-      await driver.sleep(2000);  // Sleep for 2 seconds for visualization
-   
-    // You can add more scraping logic for other elements
-   
     
-  } catch (error) {
-    console.log('Error occurred:', error);
+    // Locate the submit button by its `type` attribute
+    let submitButton = await driver.findElement(
+      By.css('button[type="submit"]')
+    );
+
+    // Click the submit button
+    await submitButton.click();
+
+    // Wait for the specific element to appear
+    let targetElementForOwnerName = await driver.wait(
+      until.elementLocated(
+        By.css(
+          "#__nuxt > div.flex.min-h-screen.flex-col > main > section > div.flex.w-full.flex-col.items-center.py-8 > div > div > div.rounded-lg.border.bg-card.text-card-foreground.shadow-sm.mt-16 > div:nth-child(1) > div > div > p.text-md.font-medium.leading-none"
+        )
+      ),
+      10000 // Timeout in milliseconds
+    );
+    if (targetElementForOwnerName) {
+      // Optionally retrieve the text content of the element
+      let ownerName = await targetElementForOwnerName.getText();
+      console.log("Owner Name:", ownerName);
+
+      // Locate the second element and get its text
+      let targetElementForOperatorName = await driver.findElement(
+        By.css(
+          "#__nuxt > div.flex.min-h-screen.flex-col > main > section > div.flex.w-full.flex-col.items-center.py-8 > div > div > div.rounded-lg.border.bg-card.text-card-foreground.shadow-sm.mt-16 > div:nth-child(1) > div > div > p.text-sm.text-muted-foreground"
+        )
+      );
+      let operatorName = await targetElementForOperatorName.getText();
+
+      console.log("Operator Name:", operatorName);
+    }else{
+        console.log("Owner Name and Operator Name not found");
+    }
+
+    await driver.sleep(2000);
+  } catch (e) {
+    console.error(e);
   } finally {
     // Close the browser after the operation
     await driver.quit();
@@ -97,6 +114,7 @@ async function scrapeExample() {
 }
 
 scrapeExample();
+
 ```
 
 ---
