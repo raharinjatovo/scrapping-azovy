@@ -1,22 +1,13 @@
-const axios = require('axios');
-let data = JSON.stringify({
-  "phone_number": "0343403434"
-});
 
-let config = {
-  method: 'post',
-  maxBodyLength: Infinity,
-  url: 'https://azovy.vercel.app/api/whois',
-  headers: { 
-    'Content-Type': 'application/json'
-  },
-  data : data
-};
+const getWhois = require('./sources/functions')
+const onPhoneNumber = new getWhois();
 
-axios.request(config)
-.then((response) => {
-  console.log(JSON.stringify(response.data));
-})
-.catch((error) => {
-  console.log(error);
-});
+(async()=>{
+  try {
+    const response = await onPhoneNumber.getInfos('0343403434');
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+ 
+})()
